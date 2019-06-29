@@ -38,6 +38,52 @@ void doblado(mpz_t *p,mpz_t *result){
 }
 
 
+void addjac(mpz_t *p1,mpz_t *p2,mpz_t *result){
+  mpz_t aux1,aux2,aux3,alpha,beta;
+  mpz_init(aux1);
+  mpz_init(aux2);
+  mpz_init(alpha);
+  mpz_init(beta);
+  //////////////////alpha//////////////////
+  mpz_pow_ui(aux1,p1[2],3);
+  mpz_mul(aux1,aux1,p2[1]);
+  mpz_pow_ui(aux2,p2[2],3);
+  mpz_mul(aux2,aux2,p1[1]);
+  mpz_sub(alpha,aux1,aux2);
+  /////////////////beta/////////////////////
+  mpz_pow_ui(aux1,p1[2],2);
+  mpz_mul(aux1,aux1,p1[1]);
+  mpz_pow_ui(aux2,p2[2],2);
+  mpz_mul(aux2,p1[0],aux2);
+  mpz_sub(beta,aux1,aux2);
+  ///////////////Z_3/////////////////////////
+  mpz_mul(aux1,p1[2],p2[2]);
+  mpz_mul(resul[2],aux1,beta);
+  ////////////////X_3////////////
+  mpz_pow_ui(aux1,alpha,2);
+  mpz_pow_ui(aux2,beta,3);
+  mpz_sub(aux1,aux1,aux2);
+  mpz_pow_ui(aux2,p2[1],2);
+  mpz_mul(aux2,aux2,2);
+  mpz_mul(aux2,aux2,p1[0]);
+  mpz_pow_ui(aux3,beta,3);
+  mpz_mul(aux2,aux2,aux2);
+  mpz_sub(result[0],aux1,aux2);
+  ///////////////Y_3////////////////
+  mpz_pow_ui(aux1,p2[2],2);
+  mpz_mul(aux1,aux1,p1[0]);
+  mpz_pow_ui(aux2,beta,2);
+  mpz_mul(aux1,aux1,aux2);
+  mpz_sub(aux1,aux1,result[0]);
+  mpz_mul(aux1,aux1,alpha);
+  mpz_pow_ui(aux2,p2[2],3);
+  mpz_mul(aux2,aux2,p1[1]);
+  mpz_pow_ui(aux3,beta,3);
+  mpz_mul(aux2,aux2,aux3);
+  mpz_sub(result[1],aux1,aux2);
+}
+
+
 int main(int argc, char const *argv[]) {
 
   mpz_t *p1,*p2,*result;
@@ -56,7 +102,7 @@ int main(int argc, char const *argv[]) {
 
   doblado(p1,result);
   gmp_printf("%Zd\n",result[0]);
-
+  addjac(p1,p2,result);
 
   free(result);
   free(p1);
